@@ -1,0 +1,24 @@
+---
+interface Props {
+  token: string;
+  specName?: string;
+  name: string;
+  hex: string;
+  usage?: string;
+}
+
+const { token, specName, name, hex, usage } = Astro.props;
+---
+
+<div class="overflow-hidden rounded-md border border-line bg-surface">
+  <div class="h-24" style={`background-color:${hex}`} aria-hidden="true"></div>
+  <div class="px-3.5 py-3.5">
+    <p class="font-serif text-lg leading-tight">{name}</p>
+    <p class="mt-1 font-mono text-caption text-ink-muted">{hex.toUpperCase()}</p>
+    <p class="mt-1 font-mono text-caption text-ink-muted">--{token}</p>
+    {specName && (
+      <p class="mt-1 font-mono text-[0.6875rem] text-ink-muted">§4.2: {specName}</p>
+    )}
+    {usage && <p class="mt-2 text-caption text-ink-muted">{usage}</p>}
+  </div>
+</div>

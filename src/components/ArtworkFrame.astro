@@ -1,0 +1,43 @@
+---
+/**
+ * Gallery-style artwork frame (§4.10).
+ * 16px padding, Soft Ivory surface, hairline border, 20px radius, soft shadow,
+ * 12–16px image radius. The artwork stays the hero; the frame never competes.
+ */
+interface Props {
+  caption?: string;
+  /** Tailwind aspect utility, e.g. aspect-[4/5]. */
+  ratio?: string;
+  wash?: "soft" | "blue" | "none";
+  premium?: boolean;
+  class?: string;
+}
+
+const {
+  caption,
+  ratio = "aspect-[4/5]",
+  wash = "soft",
+  premium = false,
+  class: className,
+} = Astro.props;
+---
+
+<figure
+  class:list={[
+    "rounded-lg border border-line bg-surface p-4",
+    premium ? "shadow-premium" : "shadow-soft",
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      "overflow-hidden rounded-md border border-line bg-background",
+      ratio,
+      wash === "soft" && "wash-soft",
+      wash === "blue" && "wash-blue",
+    ]}
+  >
+    <slot />
+  </div>
+  {caption && <figcaption class="mt-4 text-caption text-ink-muted">{caption}</figcaption>}
+</figure>

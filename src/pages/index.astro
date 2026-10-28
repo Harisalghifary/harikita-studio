@@ -1,0 +1,155 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import ArtworkFrame from "../components/ArtworkFrame.astro";
+import { site, isPlaceholder } from "../config/site";
+
+const availability = isPlaceholder(site.availability)
+  ? "A small number of commissions each month, by choice."
+  : site.availability;
+
+/** Example design names from PROJECT_SPEC.md §5.2 — placeholders, not real work. */
+const previews = [
+  { name: "Blue Petal Story", style: "Blue Romance", wash: "blue" as const },
+  { name: "Rose Morning", style: "Pink Blossom", wash: "soft" as const },
+  { name: "Soft Sapphire", style: "Watercolor", wash: "blue" as const },
+];
+
+const steps = [
+  {
+    title: "Share your story",
+    body: "Names, dates, colours and the mood you are imagining.",
+  },
+  {
+    title: "Art direction",
+    body: "A personal visual direction, sketched before anything is final.",
+  },
+  {
+    title: "Design creation",
+    body: "The invitation artwork is painted and refined with you.",
+  },
+  {
+    title: "Digital keepsake",
+    body: "Delivered as a beautiful page you can send to everyone.",
+  },
+];
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="mx-auto max-w-6xl px-6 pb-20 pt-14 sm:pt-20">
+    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div class="rise">
+        <p class="text-eyebrow uppercase text-primary">
+          Personalized wedding invitation art
+        </p>
+
+        <!-- Provisional tagline — see PROJECT_SPEC.md Appendix A -->
+        <h1 class="mt-5 text-hero leading-[1.02]">
+          Your story,<br />
+          <span class="font-script text-[1.12em] font-normal tracking-normal text-primary">
+            made into art.
+          </span>
+        </h1>
+
+        <p class="mt-6 max-w-md text-body text-ink-muted">
+          {site.taglineLong} Painted by hand, made to be kept.
+        </p>
+
+        <div class="mt-9 flex flex-wrap gap-3">
+          <Button href="/commission">Commission a piece</Button>
+          <Button href="/portfolio" variant="secondary">View portfolio</Button>
+        </div>
+
+        <p class="mt-6 text-caption text-ink-muted">{availability}</p>
+      </div>
+
+      <ArtworkFrame
+        class="rise-slow"
+        premium
+        ratio="aspect-[4/5]"
+        caption="First artworks in progress — this frame is a placeholder."
+      >
+        <div class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
+          <span class="text-eyebrow uppercase text-ink-muted">Placeholder</span>
+          <p class="font-serif text-2xl leading-snug">
+            The first three pieces<br />are being painted.
+          </p>
+        </div>
+      </ArtworkFrame>
+    </div>
+  </section>
+
+  <!-- Artwork preview -->
+  <section class="border-y border-line bg-surface/60">
+    <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 class="text-title">The first collection</h2>
+        <p class="max-w-sm text-caption text-ink-muted">
+          Empty frames, kept honest. Names are placeholders until the artwork
+          exists.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-3">
+        {
+          previews.map((piece) => (
+            <ArtworkFrame
+              ratio="aspect-[4/5]"
+              wash={piece.wash}
+              caption={`${piece.style} · in progress`}
+            >
+              <div class="flex h-full items-end p-6">
+                <p class="font-serif text-xl leading-tight text-ink-muted">
+                  {piece.name}
+                </p>
+              </div>
+            </ArtworkFrame>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    <div class="max-w-xl">
+      <p class="text-eyebrow uppercase text-ink-muted">How it works</p>
+      <h2 class="mt-4 text-title">Four quiet steps, one story</h2>
+      <p class="mt-4 text-body text-ink-muted">
+        No dashboards, no guest lists, no check-in codes. Just the artwork and
+        the people it is for.
+      </p>
+    </div>
+
+    <ol class="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        steps.map((step, index) => (
+          <li class="border-t border-line-strong pt-5">
+            <p class="font-mono text-caption text-accent-strong">
+              {String(index + 1).padStart(2, "0")}
+            </p>
+            <h3 class="mt-2 font-serif text-xl">{step.title}</h3>
+            <p class="mt-2 text-caption text-ink-muted">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Closing -->
+  <section class="mx-auto max-w-6xl px-6 pb-8">
+    <div
+      class="wash-soft rounded-lg border border-line px-8 py-16 text-center sm:px-16"
+    >
+      <h2 class="text-title">Begin your personalized invitation</h2>
+      <p class="mx-auto mt-4 max-w-md text-body text-ink-muted">
+        Tell us who you are and what you are imagining. We will reply with a
+        direction, not a checkout page.
+      </p>
+      <div class="mt-8 flex justify-center">
+        <Button href="/commission">Send an inquiry</Button>
+      </div>
+    </div>
+  </section>
+</Base>

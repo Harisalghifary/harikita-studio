@@ -1,0 +1,585 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import ArtworkFrame from "../components/ArtworkFrame.astro";
+import Swatch from "../components/Swatch.astro";
+import SgSection from "../components/SgSection.astro";
+import {
+  semanticPalette,
+  typeScale,
+  spacingScale,
+  motionScale,
+} from "../config/palette";
+import { contrastRatio, grade } from "../lib/contrast";
+
+/**
+ * Hex values are read from the real token file, so this page cannot drift.
+ * The pink override block is excluded — we want the default palette here.
+ */
+import tokenCssRaw from "../styles/tokens.css?raw";
+
+const tokenCss = tokenCssRaw.split('[data-palette="pink"]')[0];
+
+const declared = new Map<string, string>();
+for (const match of tokenCss.matchAll(/(--[a-z0-9-]+):\s*([^;]+);/g)) {
+  declared.set(match[1], match[2].trim());
+}
+
+function resolve(token: string): string {
+  const value = declared.get(`--${token}`);
+  if (!value) return "#000000";
+  const reference = value.match(/^var\((--[a-z0-9-]+)\)$/);
+  return reference ? (declared.get(reference[1]) ?? value) : value;
+}
+
+const palette = semanticPalette.map((entry) => ({
+  ...entry,
+  hex: resolve(entry.token),
+}));
+
+type Pair = {
+  label: string;
+  use: string;
+  fg: string;
+  bg: string;
+  ratio: number;
+  grade: ReturnType<typeof grade>;
+};
+
+function pair(
+  label: string,
+  fg: string,
+  bg: string,
+  use: string,
+): Pair {
+  const ratio = contrastRatio(fg, bg);
+  return { label, use, fg, bg, ratio, grade: grade(ratio) };
+}
+
+const approvedPairs: Pair[] = [
+  pair(
+    "Ink Navy on Paper Mist",
+    resolve("color-ink"),
+    resolve("color-background"),
+    "Body text on the page",
+  ),
+  pair(
+    "Ink Navy on Soft Ivory",
+    resolve("color-ink"),
+    resolve("color-surface"),
+    "Text inside cards and frames",
+  ),
+  pair(
+    "Slate Gray Blue on Paper Mist",
+    resolve("color-ink-muted"),
+    resolve("color-background"),
+    "Captions and helper text",
+  ),
+  pair(
+    "Ink Navy on Blush Petal",
+    resolve("color-ink"),
+    resolve("color-accent"),
+    "Accent button label",
+  ),
+  pair(
+    "White on Deep Cerulean",
+    "#ffffff",
+    resolve("color-primary"),
+    "Primary button label",
+  ),
+];
+
+const flaggedPairs: Pair[] = [
+  pair(
+    "Dusty Blue on Paper Mist",
+    resolve("color-primary-soft"),
+    resolve("color-background"),
+    "Why secondary blue is never body text",
+  ),
+  pair(
+    "Champagne Gold on Paper Mist",
+    resolve("color-premium"),
+    resolve("color-background"),
+    "Why gold stays decorative",
+  ),
+];
+
+const dotColor: Record<Pair["grade"]["tone"], string> = {
+  pass: "var(--color-primary)",
+  large: "var(--color-premium)",
+  fail: "var(--color-accent-strong)",
+};
+
+const sections = [
+  { id: "palette", label: "Palette" },
+  { id: "contrast", label: "Contrast" },
+  { id: "type", label: "Typography" },
+  { id: "buttons", label: "Buttons" },
+  { id: "spacing", label: "Spacing" },
+  { id: "shape", label: "Shape" },
+  { id: "frame", label: "Artwork frame" },
+  { id: "motion", label: "Motion" },
+  { id: "pink", label: "Pink-led" },
+  { id: "a11y", label: "Accessibility" },
+];
+
+const families = [
+  {
+    role: "Headings · serif",
+    name: "Cormorant Garamond",
+    className: "font-serif",
+    sample: "Aa Bb Cc",
+    note: "Couple names, page titles, artwork titles.",
+  },
+  {
+    role: "Body · sans-serif",
+    name: "Manrope",
+    className: "font-sans",
+    sample: "Aa Bb Cc",
+    note: "Paragraphs, navigation, buttons, captions.",
+  },
+  {
+    role: "Accent · script",
+    name: "Pinyon Script",
+    className: "font-script",
+    sample: "Aa Bb",
+    note: "Short romantic phrases only. Never paragraphs.",
+  },
+];
+---
+
+<Base
+  title="Design system"
+  description="Internal design system for Harikita Studio."
+  noindex
+>
+  <section class="mx-auto max-w-5xl px-6 pt-14 sm:pt-16">
+    <p class="text-eyebrow uppercase text-ink-muted">
+      Internal · not indexed · Phase 1
+    </p>
+    <h1 class="mt-4 text-hero">Design system</h1>
+    <p class="mt-5 max-w-2xl text-body text-ink-muted">
+      Everything on this page is built from the tokens in
+      <code class="font-mono text-caption">src/styles/tokens.css</code>, which
+      mirror PROJECT_SPEC.md §4. Contrast ratios are calculated from those files
+      at build time, not written by hand.
+    </p>
+
+    <div class="mt-8 rounded-lg border border-line bg-surface p-5 sm:p-6">
+      <p class="text-eyebrow uppercase text-ink-muted">Review note</p>
+      <p class="mt-2 max-w-2xl text-body">
+        If the blue feels too cool, the pink-led direction is a single override
+        block — see
+        <a class="underline decoration-line-strong underline-offset-4" href="#pink"
+          >Pink-led</a
+        >. Approving this page is the Phase 1 gate before any real page is
+        finished.
+      </p>
+    </div>
+
+    <nav aria-label="Sections" class="mt-8">
+      <ul class="flex flex-wrap gap-x-4 gap-y-1">
+        {
+          sections.map((section) => (
+            <li>
+              <a
+                href={`#${section.id}`}
+                class="inline-flex min-h-11 items-center text-caption text-ink-muted underline decoration-line-strong underline-offset-4 hover:text-ink"
+              >
+                {section.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </section>
+
+  <div class="mx-auto max-w-5xl px-6 pb-24">
+    <SgSection
+      id="palette"
+      number="01"
+      title="Palette"
+      note="Nine semantic roles from §4.2. The values live in the primitive layer, so a role can be re-pointed without touching a component."
+    >
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          palette.map((entry) => (
+            <Swatch
+              token={entry.token}
+              specName={entry.specName}
+              name={entry.name}
+              hex={entry.hex}
+              usage={entry.usage}
+            />
+          ))
+        }
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="contrast"
+      number="02"
+      title="Contrast"
+      note="WCAG 2.1 ratios computed from the token values. The two at the bottom are listed because §4.12 explicitly forbids them as text — the numbers show why."
+    >
+      <ul class="divide-y divide-line overflow-hidden rounded-md border border-line">
+        {
+          [...approvedPairs, ...flaggedPairs].map((entry, index) => (
+            <li
+              class:list={[
+                "flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3.5",
+                index === approvedPairs.length
+                  ? "bg-accent/10"
+                  : "bg-surface",
+              ]}
+            >
+              <span class="flex min-w-0 flex-1 items-center gap-2 text-caption">
+                <span class="flex shrink-0 items-center overflow-hidden rounded-sm border border-line">
+                  <span
+                    class="inline-block h-5 w-3.5"
+                    style={`background-color:${entry.bg}`}
+                    aria-hidden="true"
+                  />
+                  <span
+                    class="inline-block h-5 w-3.5"
+                    style={`background-color:${entry.fg}`}
+                    aria-hidden="true"
+                  />
+                </span>
+                <span class="min-w-0">{entry.label}</span>
+              </span>
+
+              <span class="flex items-center gap-3">
+                <span class="font-mono text-caption">
+                  {entry.ratio.toFixed(2)}:1
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-pill border border-line px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-wide">
+                  <span
+                    class="h-1.5 w-1.5 rounded-pill"
+                    style={`background-color:${dotColor[entry.grade.tone]}`}
+                    aria-hidden="true"
+                  />
+                  {entry.grade.label}
+                </span>
+              </span>
+
+              <span class="w-full text-caption text-ink-muted">
+                {entry.use}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </SgSection>
+
+    <SgSection
+      id="type"
+      number="03"
+      title="Typography"
+      note="Serif for feeling, sans for reading, script for one short phrase at a time."
+    >
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          families.map((family) => (
+            <div class="rounded-md border border-line bg-surface p-5">
+              <p class="text-eyebrow uppercase text-ink-muted">{family.role}</p>
+              <p class={`mt-3 text-4xl leading-none ${family.className}`}>
+                {family.sample}
+              </p>
+              <p class="mt-3 text-caption font-semibold">{family.name}</p>
+              <p class="mt-1 text-caption text-ink-muted">{family.note}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-10 space-y-8 border-t border-line pt-8">
+        {
+          typeScale.map((step, index) => (
+            <div class="grid gap-2 sm:grid-cols-[10rem_1fr] sm:items-baseline sm:gap-6">
+              <div>
+                <p class="text-caption font-semibold">{step.label}</p>
+                <p class="font-mono text-[0.6875rem] text-ink-muted">
+                  {step.spec}
+                </p>
+              </div>
+              <p class={`${step.className} ${index < 3 ? "font-serif" : "font-sans"}`}>
+                {step.sample}
+              </p>
+            </div>
+          ))
+        }
+        <div class="grid gap-2 sm:grid-cols-[10rem_1fr] sm:items-baseline sm:gap-6">
+          <div>
+            <p class="text-caption font-semibold">Script accent</p>
+            <p class="font-mono text-[0.6875rem] text-ink-muted">
+              Short phrases only
+            </p>
+          </div>
+          <p class="font-script text-5xl leading-tight text-primary">
+            with love
+          </p>
+        </div>
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="buttons"
+      number="04"
+      title="Buttons"
+      note="All buttons are 48px tall, above §4.12's 44px minimum. Hover and focus states are in the page — tab through them."
+    >
+      <div class="flex flex-wrap items-center gap-4">
+        <Button href="#buttons">Inquire about a commission</Button>
+        <Button href="#buttons" variant="secondary">View portfolio</Button>
+        <Button href="#buttons" variant="accent">Accent, sparingly</Button>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-md border border-line bg-surface p-4">
+          <p class="text-caption font-semibold">Primary</p>
+          <p class="mt-1 text-caption text-ink-muted">
+            Deep Cerulean background, white label. One per view.
+          </p>
+        </div>
+        <div class="rounded-md border border-line bg-surface p-4">
+          <p class="text-caption font-semibold">Secondary</p>
+          <p class="mt-1 text-caption text-ink-muted">
+            Transparent with a Dusty Blue hairline. Pairs with primary.
+          </p>
+        </div>
+        <div class="rounded-md border border-line bg-surface p-4">
+          <p class="text-caption font-semibold">Accent</p>
+          <p class="mt-1 text-caption text-ink-muted">
+            Blush Petal. Deliberately rare.
+          </p>
+        </div>
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="spacing"
+      number="05"
+      title="Spacing"
+      note="An 8-point scale. Tailwind's 4px steps land on every value, so the utilities stay standard."
+    >
+      <ul class="space-y-2">
+        {
+          spacingScale.map((row) => (
+            <li class="grid grid-cols-[4rem_4rem_1fr] items-center gap-4 text-caption">
+              <span class="font-mono text-ink-muted">{row.token}</span>
+              <span class="font-mono">{row.value}</span>
+              <span class="flex items-center gap-3">
+                <span
+                  class="h-2 rounded-sm bg-primary-soft"
+                  style={`width:${row.value}`}
+                  aria-hidden="true"
+                />
+                <span class="text-ink-muted">p-{row.tw}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </SgSection>
+
+    <SgSection
+      id="shape"
+      number="06"
+      title="Radius and elevation"
+      note="Frames and cards stay soft. Shadows are barely there on purpose."
+    >
+      <div class="grid gap-4 sm:grid-cols-4">
+        {
+          [
+            { name: "radius-sm", value: "8px", className: "rounded-sm" },
+            { name: "radius-md", value: "14px", className: "rounded-md" },
+            { name: "radius-lg", value: "20px", className: "rounded-lg" },
+            { name: "radius-pill", value: "999px", className: "rounded-pill" },
+          ].map((radius) => (
+            <div class="rounded-md border border-line bg-surface p-4 text-center">
+              <div
+                class={`mx-auto h-16 w-16 border border-line-strong bg-background ${radius.className}`}
+                aria-hidden="true"
+              />
+              <p class="mt-3 font-mono text-[0.6875rem] text-ink-muted">
+                {radius.name}
+              </p>
+              <p class="text-caption">{radius.value}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        {
+          [
+            { name: "shadow-soft", className: "shadow-soft" },
+            { name: "shadow-hover", className: "shadow-hover" },
+            { name: "shadow-premium", className: "shadow-premium" },
+          ].map((shadow) => (
+            <div
+              class={`rounded-lg border border-line bg-surface p-6 ${shadow.className}`}
+            >
+              <p class="font-mono text-[0.6875rem] text-ink-muted">
+                {shadow.name}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="frame"
+      number="07"
+      title="Artwork frame"
+      note="16px padding, Soft Ivory surface, hairline border, 20px radius, 12px image radius. The artwork stays the hero — the frame only gives it a wall."
+    >
+      <div class="grid gap-6 sm:grid-cols-2">
+        <ArtworkFrame ratio="aspect-[4/5]" caption="Standard frame · soft wash">
+          <div class="flex h-full items-end p-6">
+            <p class="font-serif text-xl leading-tight text-ink-muted">
+              Artwork goes here
+            </p>
+          </div>
+        </ArtworkFrame>
+        <ArtworkFrame
+          ratio="aspect-[4/5]"
+          wash="blue"
+          premium
+          caption="Featured frame · premium shadow"
+        >
+          <div class="flex h-full items-end p-6">
+            <p class="font-serif text-xl leading-tight text-ink-muted">
+              Featured artwork
+            </p>
+          </div>
+        </ArtworkFrame>
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="motion"
+      number="08"
+      title="Motion"
+      note="Slow, short, and one-directional. Nothing loops. Everything is disabled under prefers-reduced-motion."
+    >
+      <ul class="divide-y divide-line overflow-hidden rounded-md border border-line">
+        {
+          motionScale.map((row) => (
+            <li class="grid gap-1 bg-surface px-4 py-3.5 sm:grid-cols-[1fr_1fr_auto] sm:items-center sm:gap-4">
+              <span class="text-caption font-semibold">{row.element}</span>
+              <span class="text-caption text-ink-muted">{row.animation}</span>
+              <span class="font-mono text-caption">{row.duration}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <div class="w-full max-w-xs rounded-lg border border-line bg-surface p-5 shadow-soft transition-all duration-[250ms] ease-soft hover:-translate-y-1 hover:shadow-hover">
+          <p class="text-caption font-semibold">Hover me</p>
+          <p class="mt-1 text-caption text-ink-muted">
+            Card lift, 250ms — the same motion a portfolio card will use.
+          </p>
+        </div>
+        <p class="text-caption text-ink-muted">
+          Buttons use a 200ms colour transition; page sections rise once over
+          600ms.
+        </p>
+      </div>
+    </SgSection>
+
+    <SgSection
+      id="pink"
+      number="09"
+      title="Pink-led alternative"
+      note="§4.3, rendered live. This block carries data-palette=&quot;pink&quot; and only re-points semantic tokens — no component knows it changed."
+    >
+      <div
+        data-palette="pink"
+        class="paper rounded-lg border border-line bg-background p-6 sm:p-10"
+      >
+        <p class="text-eyebrow uppercase text-primary">Pink-led direction</p>
+        <p class="mt-3 font-serif text-3xl leading-tight">
+          Rose Morning
+        </p>
+        <p class="mt-2 max-w-md text-caption text-ink-muted">
+          Warm pearl background, dusty rose primary, slate blue secondary. Same
+          layout, same type, different temperature.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Button href="#pink">Commission a piece</Button>
+          <Button href="#pink" variant="secondary">View portfolio</Button>
+        </div>
+        <div class="mt-8 grid grid-cols-3 gap-3 sm:max-w-md">
+          <div class="h-14 rounded-md bg-primary" aria-hidden="true"></div>
+          <div class="h-14 rounded-md bg-accent" aria-hidden="true"></div>
+          <div class="h-14 rounded-md bg-primary-soft" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="mt-4 text-caption text-ink-muted">
+        To adopt it for the whole site, move these declarations into
+        <code class="font-mono">:root</code> in <code class="font-mono">tokens.css</code>.
+        Nothing else changes.
+      </p>
+      <p class="mt-2 text-caption text-ink-muted">
+        One deviation: §4.3's Dusty Rose measures 3.06:1 against white and Slate
+        Blue 3.51:1 as body copy, both below AA. This preview uses two darker
+        steps of the same hues (5.31:1 and 5.01:1) so §4.12 still holds.
+      </p>
+    </SgSection>
+
+    <SgSection
+      id="a11y"
+      number="10"
+      title="Accessibility"
+      note="The checks §4.12 asks for, stated as testable facts."
+    >
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {
+          [
+            {
+              claim: "Body text is 17px, above the 16px floor.",
+              detail: "--text-body: 1.0625rem, line-height 1.7",
+            },
+            {
+              claim: "Every interactive target is at least 44px tall.",
+              detail: "Buttons render at 48px; nav links use min-h-11",
+            },
+            {
+              claim: "Contrast passes AA for all body copy.",
+              detail: "Lowest approved pair is 5:1 — see section 02",
+            },
+            {
+              claim: "Motion respects prefers-reduced-motion.",
+              detail: "Animations collapse to 0.01ms",
+            },
+            {
+              claim: "Focus is always visible.",
+              detail: "2px Deep Cerulean outline, 3px offset",
+            },
+            {
+              claim: "There is a skip link to main content.",
+              detail: "First focusable element in the document",
+            },
+          ].map((item) => (
+            <li class="rounded-md border border-line bg-surface p-4">
+              <p class="text-caption font-semibold">{item.claim}</p>
+              <p class="mt-1 font-mono text-[0.6875rem] text-ink-muted">
+                {item.detail}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-8 text-caption text-ink-muted">
+        Artwork alt text is not shown here because there is no artwork yet.
+        When the first pieces arrive, export descriptions alongside the images —
+        §4.12 requires one per image.
+      </p>
+    </SgSection>
+  </div>
+</Base>

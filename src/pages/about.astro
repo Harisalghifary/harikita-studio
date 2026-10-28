@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+---
+
+<Base
+  title="Studio"
+  description="Harikita Studio is a husband-and-wife studio: she paints, he builds."
+>
+  <section class="mx-auto max-w-3xl px-6 py-20 sm:py-28">
+    <p class="text-eyebrow uppercase text-ink-muted">The studio</p>
+
+    <h1 class="mt-5 text-hero">
+      Two names,<br />
+      <span class="font-script text-[1.12em] font-normal text-primary">one studio.</span>
+    </h1>
+
+    <div class="mt-10 max-w-2xl space-y-6 text-body">
+      <p>
+        <strong class="font-semibold">Harikita</strong> is not an invented brand
+        name. It is <strong class="font-semibold">Haris</strong> and
+        <strong class="font-semibold">Rezkita</strong> — the two of us, from our
+        own wedding. In Indonesian, <em>kita</em> means “we”. The name says
+        “our story” twice over, which is why we kept it.
+      </p>
+      <p class="text-ink-muted">
+        She paints. He builds the thing that carries the painting to your
+        guests. That division is the whole studio: one person protecting the
+        artwork, one person keeping the technology out of its way.
+      </p>
+      <p class="text-ink-muted">
+        We accept a small number of commissions each month. Not because of
+        scarcity marketing — because watercolour takes the time it takes, and a
+        hobby should stay a pleasure.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-8 border-t border-line pt-10 sm:grid-cols-2">
+      <div>
+        <p class="text-eyebrow uppercase text-ink-muted">The artist</p>
+        <p class="mt-3 text-caption text-ink-muted">
+          Watercolour, colour and composition. Every piece is painted for one
+          couple, never reused.
+        </p>
+      </div>
+      <div>
+        <p class="text-eyebrow uppercase text-ink-muted">The builder</p>
+        <p class="mt-3 text-caption text-ink-muted">
+          A fast, quiet website. No RSVP forms, no dashboards, no feature that
+          competes with the artwork.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-wrap gap-3">
+      <Button href="/commission">Commission a piece</Button>
+      <Button href="/portfolio" variant="secondary">See the collection</Button>
+    </div>
+  </section>
+</Base>

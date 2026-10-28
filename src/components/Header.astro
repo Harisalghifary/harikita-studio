@@ -1,0 +1,40 @@
+---
+import { site } from "../config/site";
+
+const path = Astro.url.pathname;
+---
+
+<header class="border-b border-line">
+  <div
+    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-10 gap-y-1 px-6 py-5"
+  >
+    <a
+      href="/"
+      class="group inline-flex items-baseline gap-2.5"
+      aria-label={`${site.name} — home`}
+    >
+      <span class="font-serif text-2xl leading-none tracking-tight">
+        {site.shortName}
+      </span>
+      <span class="text-eyebrow uppercase text-ink-muted">studio</span>
+    </a>
+
+    <nav aria-label="Primary">
+      <ul class="flex flex-wrap items-center gap-x-7">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={path.startsWith(item.href) ? "page" : undefined}
+                class="inline-flex min-h-11 items-center text-caption font-medium text-ink-muted transition-colors duration-200 ease-soft hover:text-ink aria-[current=page]:text-ink"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

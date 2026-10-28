@@ -1,0 +1,37 @@
+---
+/**
+ * Honest placeholder for a route that is scheduled but not written yet.
+ * Deliberately says so instead of inventing content.
+ */
+interface Props {
+  title: string;
+  lede: string;
+  phase?: string;
+  items?: string[];
+}
+
+const { title, lede, phase = "Phase 1", items = [] } = Astro.props;
+---
+
+<section class="mx-auto max-w-3xl px-6 py-20 sm:py-28">
+  <p class="text-eyebrow uppercase text-ink-muted">In preparation · {phase}</p>
+  <h1 class="mt-4 text-hero font-serif">{title}</h1>
+  <p class="mt-5 max-w-xl text-body text-ink-muted">{lede}</p>
+
+  {items.length > 0 && (
+    <ul class="mt-10 space-y-3 border-t border-line pt-8">
+      {items.map((item) => (
+        <li class="flex gap-3 text-body text-ink-muted">
+          <span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-pill bg-accent-strong" aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <p class="mt-12 text-caption text-ink-muted">
+    This page is intentionally empty rather than filled with invented content.
+    See <a class="underline decoration-line-strong underline-offset-4 hover:text-ink" href="/styleguide">the design system</a>
+    for what is already decided.
+  </p>
+</section>

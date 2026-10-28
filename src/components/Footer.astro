@@ -1,0 +1,73 @@
+---
+import { site, isPlaceholder } from "../config/site";
+
+const year = new Date().getFullYear();
+const hasEmail = !isPlaceholder(site.email);
+const hasWhatsapp = !isPlaceholder(site.whatsapp);
+const hasInstagram = !isPlaceholder(site.instagram);
+const hasContact = hasEmail || hasWhatsapp || hasInstagram;
+
+const linkClass =
+  "text-caption text-ink-muted underline decoration-line-strong underline-offset-4 transition-colors duration-200 ease-soft hover:text-ink";
+---
+
+<footer class="mt-24 border-t border-line">
+  <div
+    class="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-3"
+  >
+    <div class="max-w-xs">
+      <p class="font-serif text-2xl leading-none">{site.name}</p>
+      <p class="mt-3 text-caption text-ink-muted">{site.taglineLong}</p>
+    </div>
+
+    <div>
+      <p class="text-eyebrow uppercase text-ink-muted">Contact</p>
+      <ul class="mt-3 space-y-1.5">
+        {
+          hasEmail && (
+            <li>
+              <a class={linkClass} href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </li>
+          )
+        }
+        {
+          hasWhatsapp && (
+            <li>
+              <a class={linkClass} href={site.whatsapp}>
+                WhatsApp
+              </a>
+            </li>
+          )
+        }
+        {
+          hasInstagram && (
+            <li>
+              <a class={linkClass} href={site.instagram}>
+                Instagram
+              </a>
+            </li>
+          )
+        }
+        {
+          !hasContact && (
+            <li class="text-caption text-ink-muted">
+              Contact details coming soon.
+            </li>
+          )
+        }
+      </ul>
+    </div>
+
+    <div class="lg:text-right">
+      <p class="text-caption text-ink-muted">
+        © {year} {site.name}
+      </p>
+      <p class="mt-1 text-caption text-ink-muted">{site.taglineFooter}</p>
+      <p class="mt-4">
+        <a class={linkClass} href="/styleguide">Design system (internal)</a>
+      </p>
+    </div>
+  </div>
+</footer>
