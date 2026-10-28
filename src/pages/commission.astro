@@ -3,6 +3,10 @@ import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
 import { site, isPlaceholder } from "../config/site";
 
+const hasForm = !isPlaceholder(site.tallyUrl);
+/** Tally serves the same form at /embed/<id>; hide their title since we have ours. */
+const embedUrl = site.tallyUrl.replace("/r/", "/embed/");
+
 const steps = [
   {
     title: "Share your story",
@@ -42,68 +46,96 @@ const notIncluded = [
   description="How a Harikita Studio commission works, from first message to digital keepsake."
 >
   <section class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
-    <div class="grid gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
-      <div>
-        <p class="text-eyebrow uppercase text-ink-muted">Commission</p>
-        <h1 class="mt-5 text-hero">
-          Begin your<br />
-          <span class="font-script text-[1.12em] font-normal text-primary">personalized</span>
-          invitation
-        </h1>
-        <p class="mt-6 max-w-lg text-body text-ink-muted">
-          An inquiry starts a conversation, not a transaction. Tell us who you
-          are; we will tell you honestly whether we are the right studio for it.
-        </p>
-        <p class="mt-6 text-caption text-ink-muted">
-          {isPlaceholder(site.availability)
-            ? "A small number of commissions each month, by choice."
-            : site.availability}
-        </p>
-      </div>
-
-      <div class="rounded-lg border border-line bg-surface p-6 shadow-soft sm:p-8">
-        <p class="text-eyebrow uppercase text-ink-muted">Inquiry</p>
-        <p class="mt-3 text-body">
-          The form is not connected yet. It will be a short Tally form — names,
-          date, colours, and a few lines about your story.
-        </p>
-        <ul class="mt-5 space-y-2 text-caption text-ink-muted">
-          <li>Couple names</li>
-          <li>Email or WhatsApp</li>
-          <li>Wedding date or estimate</li>
-          <li>Preferred colour nuance</li>
-          <li>Preferred style</li>
-          <li>Your story, and any references</li>
-        </ul>
-        <div class="mt-7">
-          <Button href="/about" variant="secondary">Read about the studio</Button>
-        </div>
-      </div>
+    <div class="max-w-2xl">
+      <p class="text-eyebrow uppercase text-ink-muted">Commission</p>
+      <h1 class="mt-5 text-hero leading-[1.06]">
+        Begin your<br />
+        <span class="font-script text-[1.06em] font-normal leading-[0.95] text-primary"
+          >personalized</span
+        ><br />
+        invitation
+      </h1>
+      <p class="mt-6 text-body text-ink-muted">
+        An inquiry starts a conversation, not a transaction. Tell us who you are;
+        we will reply by email within a few days and tell you honestly whether we
+        are the right studio for it.
+      </p>
+      <p class="mt-4 text-caption text-ink-muted">
+        {isPlaceholder(site.availability)
+          ? "A small number of commissions each month, by choice."
+          : site.availability}
+      </p>
     </div>
 
-    <ol class="mt-20 grid gap-x-8 gap-y-10 border-t border-line pt-12 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-12 max-w-2xl">
       {
-        steps.map((step, index) => (
-          <li>
-            <p class="font-mono text-caption text-accent-strong">
-              {String(index + 1).padStart(2, "0")}
+        hasForm ? (
+          <div class="overflow-hidden rounded-lg border border-line bg-surface shadow-soft">
+            <div class="border-b border-line px-5 py-4 sm:px-6">
+              <p class="text-eyebrow uppercase text-ink-muted">Inquiry</p>
+            </div>
+            <iframe
+              src={`${embedUrl}?hideTitle=1&alignLeft=1&transparentBackground=1`}
+              title="Commission inquiry form"
+              class="h-[1100px] w-full"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+            <div class="border-t border-line px-5 py-3 sm:px-6">
+              <p class="text-caption text-ink-muted">
+                Form not loading?
+                <a
+                  href={site.tallyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="underline decoration-line-strong underline-offset-4 hover:text-ink"
+                >
+                  Open it in a new tab
+                </a>.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div class="rounded-lg border border-line bg-surface p-6 shadow-soft sm:p-8">
+            <p class="text-eyebrow uppercase text-ink-muted">Inquiry</p>
+            <p class="mt-3 text-body">
+              The form is not connected yet. It will ask for names, date, colours
+              and a few lines about your story.
             </p>
-            <h2 class="mt-2 font-serif text-xl">{step.title}</h2>
-            <p class="mt-2 text-caption text-ink-muted">{step.body}</p>
-          </li>
-        ))
+            <div class="mt-7">
+              <Button href="/about" variant="secondary">Read about the studio</Button>
+            </div>
+          </div>
+        )
       }
-    </ol>
+    </div>
+
+    <div class="mt-20 border-t border-line pt-12">
+      <h2 class="text-title">What happens next</h2>
+      <ol class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          steps.map((step, index) => (
+            <li>
+              <p class="font-mono text-caption text-accent-strong">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <h3 class="mt-2 font-serif text-xl">{step.title}</h3>
+              <p class="mt-2 text-caption text-ink-muted">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
 
     <div class="mt-16 grid gap-8 sm:grid-cols-2">
       <div class="rounded-lg bg-surface p-6 ring-1 ring-line">
-        <p class="text-eyebrow uppercase text-ink-muted">What you receive</p>
+        <h2 class="text-eyebrow uppercase text-ink-muted">What you receive</h2>
         <ul class="mt-3 space-y-2 text-caption">
           {included.map((item) => <li>{item}</li>)}
         </ul>
       </div>
       <div class="rounded-lg bg-surface p-6 ring-1 ring-line">
-        <p class="text-eyebrow uppercase text-ink-muted">What we do not do</p>
+        <h2 class="text-eyebrow uppercase text-ink-muted">What we do not do</h2>
         <ul class="mt-3 space-y-2 text-caption text-ink-muted">
           {notIncluded.map((item) => <li>{item}</li>)}
         </ul>

@@ -13,6 +13,7 @@ export const GET: APIRoute = async ({ site: configured }) => {
     "/about/",
     "/commission/",
     "/faq/",
+    "/privacy/",
     ...artworks.map((artwork) => `/portfolio/${artwork.id}/`),
   ];
 

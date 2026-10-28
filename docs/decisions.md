@@ -194,3 +194,30 @@ Keepsake pages live at `harikita.store/i/<slug>`. Subdomains are deferred, not r
 **Prefix is required:** `/about`, `/faq` and `/portfolio` are studio routes. Without `/i/`, a couple named "About" would collide. The prefix is reserved in `src/config/site.ts` as `KEEPSAKE_PREFIX`.
 **Reversible:** if subdomains become part of the offer, add a `subdomain` field to the client entry and route `*.harikita.store` to `/i/<slug>/` with a Worker. No content migration, no page rebuilds.
 **Assumption:** draft is private, published is public — a keepsake is something sent to guests (§3.1). Changing this later is a single `access` field.
+
+---
+
+## D-015 — Tally is the inquiry backend
+
+**Date:** 2026-10-29
+**Status:** Accepted
+
+The commission form is a Tally form (`https://tally.so/r/zEEvka`), embedded on `/commission` in an iframe rather than Tally's script embed.
+
+**Why:** the site is static with no server and no database. Something has to receive the form, and a hosted form is the smallest thing that works. An iframe keeps Tally's JavaScript out of our document and confines it to one page; a script embed would have injected a third-party bundle into every page it appeared on.
+**Trade-off:** `/commission` is now the only page that makes a third-party request. Every other page remains zero-JS.
+**Rules out:** a hand-rolled form handler, a database of inquiries, and Stripe/checkout of any kind.
+**Side effect:** because the iframe loads the live form, edits in Tally appear on the site without a rebuild.
+
+---
+
+## D-016 — The form is the contact channel
+
+**Date:** 2026-10-29
+**Status:** Accepted
+
+No email address, phone number, or WhatsApp link is published at launch. The footer links to `/commission` instead.
+
+**Why:** publishing a personal number creates an expectation of instant replies and an open door for spam, at a point where the studio takes a handful of commissions a month. The form gives the couple a place to introduce themselves and gives us a reply address without exposing anything.
+**Reversible:** `site.email` and `site.whatsapp` already exist in `src/config/site.ts`. Filling either one replaces the "Commission inquiry form" footer link automatically — no component change.
+**Related:** `/privacy` states where inquiry data goes and how to have it deleted; deletion runs through reply-to-our-email, so no public address is needed for that either.

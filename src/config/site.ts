@@ -21,6 +21,12 @@ export const site = {
   instagram: "{{INSTAGRAM}}",
   availability: "{{AVAILABILITY_NOTE}}",
 
+  /**
+   * Inquiry form (D-015). The live form is the contact channel (D-016), so no
+   * email or phone number is published at launch.
+   */
+  tallyUrl: "https://tally.so/r/zEEvka",
+
   nav: [
     { label: "Portfolio", href: "/portfolio" },
     { label: "Studio", href: "/about" },

@@ -1,0 +1,89 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../config/site";
+
+const updated = "29 October 2026";
+---
+
+<Base
+  title="Privacy"
+  description="What happens to the information you send through a Harikita Studio inquiry."
+>
+  <section class="mx-auto max-w-3xl px-6 py-20 sm:py-28">
+    <p class="text-eyebrow uppercase text-ink-muted">Privacy</p>
+    <h1 class="mt-4 text-title">What we do with your details</h1>
+    <p class="mt-4 text-caption text-ink-muted">Last updated {updated}</p>
+
+    <div class="mt-10 space-y-8 text-body">
+      <div>
+        <h2 class="font-serif text-card">What you send us</h2>
+        <p class="mt-2 text-ink-muted">
+          If you use the commission form, that is your names, an email address or
+          WhatsApp number, your wedding date, colour and style preferences, your
+          story, and any links you choose to share. Nothing else.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">Where it goes</h2>
+        <p class="mt-2 text-ink-muted">
+          The form is hosted by Tally Solutions BV. Your submission is stored in
+          their system and forwarded to us by email. We do not run our own
+          database, and we are the only people who read it.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">What this site does not do</h2>
+        <p class="mt-2 text-ink-muted">
+          No analytics, no advertising pixels, no tracking cookies, no profiles of
+          visitors. The pages are static files; the only script that runs is the
+          embedded form itself, and only on the commission page.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">How long we keep it</h2>
+        <p class="mt-2 text-ink-muted">
+          Inquiries we do not take on are deleted within twelve months. If we work
+          together, we keep the correspondence for as long as you might reasonably
+          need us to, and no longer.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">Removing your data</h2>
+        <p class="mt-2 text-ink-muted">
+          Reply to any email we have sent you and ask for it to be deleted, and we
+          will remove the inquiry from Tally and from our inbox. You do not need to
+          give a reason.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">Your artwork</h2>
+        <p class="mt-2 text-ink-muted">
+          The artwork is made for you. We would like to show finished pieces in the
+          portfolio, always without your guest details — tell us at any point if you
+          would rather we did not, and we will take it down.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-card">Questions</h2>
+        <p class="mt-2 text-ink-muted">
+          Use the{" "}
+          <a
+            class="underline decoration-line-strong underline-offset-4 hover:text-ink"
+            href="/commission">commission form</a
+          >{" "}
+          and mention privacy. That reaches us the same way an inquiry does.
+        </p>
+      </div>
+    </div>
+
+    <p class="mt-12 border-t border-line pt-6 text-caption text-ink-muted">
+      {site.name} · {site.domain}
+    </p>
+  </section>
+</Base>
