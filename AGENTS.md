@@ -50,6 +50,7 @@ Locked in Phase 0 (2026-10-28):
 - Color pairings must come from §4.12's approved list, not invented.
 - Motion follows §4.11: 200–700ms, gentle, and never on a loop.
 - Anything unconfirmed is written as a `{{TOKEN}}` placeholder so a fake value never ships.
+- `/i/` is reserved for keepsake pages. Studio routes stay at the root.
 - Prefer editing existing files over adding new ones; prefer no dependency over a small dependency.
 
 ## When in doubt

@@ -37,6 +37,13 @@ export const site = {
  */
 export const SITE_LIVE = import.meta.env.PUBLIC_SITE_LIVE === "true";
 
+/**
+ * Reserved namespace for keepsake pages: /i/<slug>.
+ * Studio routes live at the root, so this prefix prevents a couple named
+ * "About" or "FAQ" from colliding with them. See D-014.
+ */
+export const KEEPSAKE_PREFIX = "/i";
+
 /** True while a value is still an unfilled {{placeholder}}. */
 export function isPlaceholder(value: string): boolean {
   return value.startsWith("{{");

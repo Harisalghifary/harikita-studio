@@ -174,3 +174,23 @@ The single switch `PUBLIC_SITE_LIVE` controls the boundary:
 **Why:** Waiting for finished artwork blocks all layout work and hides design problems until the most expensive moment. A flag makes previewing free and publishing fake work impossible by accident.
 **Rules out:** Committing a placeholder as `placeholder: false`, and launching with any placeholder still present.
 **Also confirmed:** the blue-led palette (§4.2) is the default. It contrasts with the blush-and-rose palette most invitation art uses, passes AA as specified, and reads as a studio rather than a template shop. The pink direction stays available as the D-009 override.
+
+---
+
+## D-014 — Keepsake URLs use a slug, not a subdomain
+
+**Date:** 2026-10-29
+**Status:** Accepted
+
+Keepsake pages live at `harikita.store/i/<slug>`. Subdomains are deferred, not rejected.
+
+| State | URL | Indexable | Purpose |
+|---|---|---|---|
+| Draft | `/i/arif-kirana-7f3k` | no | private preview for the couple |
+| Published | `/i/arif-kirana` | optional | the link guests receive |
+
+**Why:** one deployment, one build, one certificate, no per-client host mapping. Subdomains would need a Worker in front of Cloudflare Pages to route wildcard hosts, plus a mapping to maintain for every client — real complexity for a hobby studio, and no MVP benefit.
+**Not the reason:** certificate cost. Cloudflare's free Universal SSL already covers `*.harikita.store`.
+**Prefix is required:** `/about`, `/faq` and `/portfolio` are studio routes. Without `/i/`, a couple named "About" would collide. The prefix is reserved in `src/config/site.ts` as `KEEPSAKE_PREFIX`.
+**Reversible:** if subdomains become part of the offer, add a `subdomain` field to the client entry and route `*.harikita.store` to `/i/<slug>/` with a Worker. No content migration, no page rebuilds.
+**Assumption:** draft is private, published is public — a keepsake is something sent to guests (§3.1). Changing this later is a single `access` field.

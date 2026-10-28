@@ -1130,3 +1130,6 @@ These are recorded observations about the spec body. They are not edits to §1�
 5. **The artwork is digital, not painted.** §4.10 assumes scanned watercolour textures and the draft copy said “painted by hand”. Copy now says *drawn* / *illustrated*, and the paper grain is CSS, so the site has no dependency on scanning or physical media. Export requirements are Procreate-native: 3000 × 3750 px (4:5), sRGB, JPG quality ~90.
 
 6. **Preview artwork is fenced off by a flag.** Six placeholder entries exist so every route could be built and reviewed. While `PUBLIC_SITE_LIVE` is unset they carry a Preview badge and the site is `noindex`; setting it to `true` excludes them from the build and prints their slugs as a warning. Logged as D-013.
+### Reserved Namespaces
+
+- `/i/<slug>` — keepsake pages. Reserved now, built in Phase 2. Studio routes stay at the root so a couple named "About" or "FAQ" cannot collide with them. Drafts carry a short token (`/i/arif-kirana-7f3k`, not indexed); published keepsakes use the plain slug. Subdomains (`name.harikita.store`) are deferred — see D-014.
