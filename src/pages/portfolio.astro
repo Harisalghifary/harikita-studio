@@ -1,22 +1,54 @@
 ---
 import Base from "../layouts/Base.astro";
-import Stub from "../components/Stub.astro";
+import ArtworkCard from "../components/ArtworkCard.astro";
+import Button from "../components/Button.astro";
+import { getArtworks } from "../lib/artworks";
+
+const artworks = await getArtworks();
+const previewCount = artworks.filter((entry) => entry.data.placeholder).length;
 ---
 
 <Base
   title="Portfolio"
-  description="A collection of personalized wedding invitation artwork by Harikita Studio."
+  description="Personalized wedding invitation artwork by Harikita Studio, drawn for one couple at a time."
 >
-  <Stub
-    title="The collection"
-    lede="Three to six finished pieces will open this gallery. Until they exist, the frames stay empty — a portfolio should be the work, not a template."
-    items={[
-      "Blue Romance — deep cerulean, quiet and formal.",
-      "Pink Blossom — blush petals, warm and romantic.",
-      "Watercolor — soft washes, hand-painted edges.",
-      "Minimal Elegant — ink and paper, almost nothing else.",
-      "Floral — botanical detail, drawn slowly.",
-      "Storybook — a page that reads like a chapter.",
-    ]}
-  />
+  <section class="mx-auto max-w-6xl px-6 pt-14 sm:pt-20">
+    <p class="text-eyebrow uppercase text-ink-muted">Portfolio</p>
+    <h1 class="mt-4 text-hero">The collection</h1>
+    <p class="mt-5 max-w-xl text-body text-ink-muted">
+      {
+        previewCount > 0
+          ? `${previewCount} frames currently hold preview work while the first real pieces are drawn. Each one becomes a commission that belongs to a single couple.`
+          : "A small collection, drawn for one couple at a time. Nothing here is a template."
+      }
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-20 pt-12">
+    {
+      artworks.length > 0 ? (
+        <ul class="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {artworks.map((artwork, index) => (
+            <li>
+              <ArtworkCard
+                artwork={artwork}
+                wash={index % 2 === 0 ? "blue" : "soft"}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="rounded-lg border border-line bg-surface px-8 py-16 text-center">
+          <p class="font-serif text-2xl">The gallery is being drawn</p>
+          <p class="mx-auto mt-3 max-w-sm text-caption text-ink-muted">
+            The first pieces are still in progress. In the meantime, a
+            commission starts with a conversation.
+          </p>
+          <div class="mt-8 flex justify-center">
+            <Button href="/commission">Commission a piece</Button>
+          </div>
+        </div>
+      )
+    }
+  </section>
 </Base>

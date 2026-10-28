@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+
+import ArtworkFrame from "./ArtworkFrame.astro";
+import PreviewBadge from "./PreviewBadge.astro";
+import type { Artwork } from "../lib/artworks";
+
+interface Props {
+  artwork: Artwork;
+  wash?: "soft" | "blue";
+  /** h2 directly under a page h1; h3 when the grid sits under a section heading. */
+  heading?: "h2" | "h3";
+  class?: string;
+}
+
+const {
+  artwork,
+  wash = "soft",
+  heading = "h2",
+  class: className,
+} = Astro.props;
+
+const { data } = artwork;
+const Heading = heading;
+---
+
+<a href={`/portfolio/${artwork.id}/`} class:list={["group block", className]}>
+  <ArtworkFrame
+    ratio="aspect-[4/5]"
+    wash={wash}
+    premium={data.featured}
+    class="transition-all duration-[250ms] ease-soft group-hover:-translate-y-1 group-hover:shadow-hover"
+  >
+    {
+      data.cover ? (
+        <Image
+          src={data.cover}
+          alt={data.coverAlt ?? data.title}
+          widths={[400, 640, 900]}
+          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+        />
+      ) : (
+        <div class="flex h-full items-center justify-center p-6">
+          <span class="text-eyebrow uppercase text-ink-muted">Preview frame</span>
+        </div>
+      )
+    }
+  </ArtworkFrame>
+
+  <div class="mt-3 flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <Heading class="font-serif text-card leading-snug">{data.title}</Heading>
+      <p class="mt-0.5 text-caption text-ink-muted">{data.medium}</p>
+    </div>
+    {data.placeholder && <PreviewBadge />}
+  </div>
+</a>

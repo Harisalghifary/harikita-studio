@@ -2,8 +2,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  // TODO: set once the domain is confirmed (PROJECT_SPEC.md Appendix B).
-  // site: 'https://harikita.example',
+  site: 'https://harikita.store',
 
   vite: {
     plugins: [tailwindcss()],

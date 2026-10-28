@@ -127,3 +127,50 @@ Pin `astro@^5.18.2`. Dev runs on Node 22 (`.nvmrc`).
 
 **Why:** Astro 7 requires Node ≥22.23.4 and was released days ago; §7 explicitly warns against unnecessary risk in a hobby project. Astro 5 is stable, supports Node 20 and 22, and renders this site to plain HTML.
 **Rules out:** Upgrading majors before launch. Revisit after Phase 3.
+
+---
+
+## D-011 — Domain is harikita.store
+
+**Date:** 2026-10-28
+**Status:** Accepted
+
+`https://harikita.store`, registered 24 Oct 2026 via Hostinger, expires 24 Oct 2027.
+
+**Why:** Confirmed by the owner. `astro.config.mjs` sets it as `site`, which turns on canonical URLs and the sitemap.
+**Actions taken:** `site` + `og:url` in the layout, `robots.txt` and `sitemap.xml` endpoints, domain recorded in `src/config/site.ts`.
+**Rules out:** A `{{DOMAIN}}` placeholder in metadata, or a www/non-www split.
+**Follow-up (owner):** enable auto-renew; point nameservers at Cloudflare before connecting Cloudflare Pages. Transfer is locked until ~23 Dec 2026.
+
+---
+
+## D-012 — No style categories in the portfolio
+
+**Date:** 2026-10-29
+**Status:** Accepted
+
+The portfolio is a flat grid. Artwork carries **colour tags** (`palette`), not style categories.
+
+**Why:** §5.1 suggests six categories (Blue Romance, Pink Blossom, Watercolor…), but the artist is still finding her style and works in Procreate. A taxonomy asserted before a body of work exists produces empty shelves, and it quietly tells her what she is allowed to make. Colour tags describe a piece accurately without claiming a style.
+**Rules out:** Filter UI and category pages until she names a series herself.
+**Revisit:** after roughly ten finished pieces, or the first deliberate series.
+
+---
+
+## D-013 — Placeholders first, guarded by PUBLIC_SITE_LIVE
+
+**Date:** 2026-10-29
+**Status:** Accepted
+
+Six placeholder artworks ship now, each `placeholder: true`, so every route can be built and reviewed before real art exists.
+
+The single switch `PUBLIC_SITE_LIVE` controls the boundary:
+
+| Value | Behaviour |
+|---|---|
+| `false` (default) | Placeholders render with a **Preview** badge; the site is `noindex`; `robots.txt` disallows everything |
+| `true` | Placeholder entries are excluded from the build; the build prints a warning naming them; the site becomes indexable and the sitemap is referenced |
+
+**Why:** Waiting for finished artwork blocks all layout work and hides design problems until the most expensive moment. A flag makes previewing free and publishing fake work impossible by accident.
+**Rules out:** Committing a placeholder as `placeholder: false`, and launching with any placeholder still present.
+**Also confirmed:** the blue-led palette (§4.2) is the default. It contrasts with the blush-and-rose palette most invitation art uses, passes AA as specified, and reads as a studio rather than a template shop. The pink direction stays available as the D-009 override.

@@ -1,0 +1,115 @@
+---
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+
+import Base from "../../layouts/Base.astro";
+import Button from "../../components/Button.astro";
+import ArtworkFrame from "../../components/ArtworkFrame.astro";
+import PreviewBadge from "../../components/PreviewBadge.astro";
+import { formatDate, getArtworks, type Artwork } from "../../lib/artworks";
+
+export async function getStaticPaths() {
+  const artworks = await getArtworks();
+  return artworks.map((artwork) => ({
+    params: { slug: artwork.id },
+    props: { artwork },
+  }));
+}
+
+interface Props {
+  artwork: Artwork;
+}
+
+const { artwork } = Astro.props;
+const { data } = artwork;
+const { Content } = await render(artwork);
+---
+
+<Base
+  title={data.title}
+  description={data.summary}
+  noindex={data.placeholder}
+>
+  <article class="mx-auto max-w-6xl px-6 pt-10 sm:pt-14">
+    <a
+      href="/portfolio"
+      class="inline-flex min-h-11 items-center text-caption text-ink-muted transition-colors duration-200 ease-soft hover:text-ink"
+    >
+      ← Portfolio
+    </a>
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div class="lg:sticky lg:top-10 lg:self-start">
+        <ArtworkFrame ratio="aspect-[4/5]" wash="soft" premium>
+          {
+            data.cover ? (
+              <Image
+                src={data.cover}
+                alt={data.coverAlt ?? data.title}
+                widths={[600, 900, 1200]}
+                sizes="(min-width: 1024px) 48vw, 90vw"
+                loading="eager"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+            ) : (
+              <div class="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
+                <span class="text-eyebrow uppercase text-ink-muted">Artwork</span>
+                <p class="font-serif text-xl text-ink-muted">In progress</p>
+              </div>
+            )
+          }
+        </ArtworkFrame>
+      </div>
+
+      <div class="max-w-xl">
+        {data.placeholder && (
+          <div class="mb-6 rounded-md border border-line bg-accent/15 px-4 py-3">
+            <p class="text-caption">
+              Preview entry — this is placeholder work for layout testing, not a
+              finished commission.
+            </p>
+          </div>
+        )}
+
+        <div class="flex flex-wrap items-center gap-3">
+          <p class="text-eyebrow uppercase text-ink-muted">
+            {formatDate(data.date)}
+          </p>
+          {data.placeholder && <PreviewBadge />}
+        </div>
+
+        <h1 class="mt-3 text-title">{data.title}</h1>
+        <p class="mt-3 text-body text-ink-muted">{data.summary}</p>
+
+        <dl class="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-y border-line py-4">
+          <div>
+            <dt class="text-eyebrow uppercase text-ink-muted">Medium</dt>
+            <dd class="mt-1 text-caption">{data.medium}</dd>
+          </div>
+          <div>
+            <dt class="text-eyebrow uppercase text-ink-muted">Palette</dt>
+            <dd class="mt-1 flex flex-wrap gap-1.5">
+              {
+                data.palette.map((colour) => (
+                  <span class="rounded-pill border border-line px-2.5 py-0.5 text-caption text-ink-muted">
+                    {colour}
+                  </span>
+                ))
+              }
+            </dd>
+          </div>
+        </dl>
+
+        <div class="mt-8 space-y-4 text-body text-ink-muted">
+          <Content />
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <Button href="/commission">Commission a piece</Button>
+          <Button href="/portfolio" variant="secondary">All work</Button>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

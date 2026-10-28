@@ -1072,6 +1072,7 @@ Recorded 2026-10-28. These decisions resolve the Phase 0 deliverables listed in 
 | Field | Decision |
 |---|---|
 | Project folder | `/Users/xbox/github/wedding-art-portal` |
+| Domain | `harikita.store` — registered 24 Oct 2026, expires 24 Oct 2027 |
 | Studio name | **Harikita Studio** |
 | Stack | Astro + TypeScript + Tailwind CSS, static output |
 | Hosting | Cloudflare Pages |
@@ -1103,7 +1104,7 @@ Chosen 2026-10-28, subject to the wife’s sign-off:
 
 ### Open Items
 
-- [ ] Domain name (check `harikita` availability before printing anything)
+- [x] Domain name — `harikita.store`, registered 24 Oct 2026 via Hostinger, expires 24 Oct 2027. Enable auto-renew; move nameservers to Cloudflare before connecting Cloudflare Pages.
 - [ ] Instagram / social handles
 - [ ] Contact email and/or WhatsApp number (currently `{{CONTACT_EMAIL}}`, `{{WHATSAPP}}`)
 - [ ] Availability wording, e.g. “2 commission slots open for December”
@@ -1123,3 +1124,9 @@ These are recorded observations about the spec body. They are not edits to §1�
 2. **The timeline’s real dependency is artwork, not code.** §6 allots one week (Week 2) to producing the first portfolio pieces. The static MVP is a few days of work; the artwork is the critical path and cannot be compressed by engineering effort. Treat the four-week table as aspirational and gate Phase 1 on “art exists”, not “code exists”.
 
 3. **Styleguide route is a drift guard.** `/styleguide` is not a marketing page. It renders every token, type step, button, and frame from §4 so that §9’s “Colors match design system” check is verifiable rather than a matter of opinion.
+
+4. **Style categories are deferred (§5.1).** The artist is still finding her style, and works digitally in Procreate. Six named categories before a body of work exists would produce empty shelves and quietly prescribe what she is allowed to make. The portfolio is a flat grid with colour tags; series naming returns once she names one herself. Logged as D-012.
+
+5. **The artwork is digital, not painted.** §4.10 assumes scanned watercolour textures and the draft copy said “painted by hand”. Copy now says *drawn* / *illustrated*, and the paper grain is CSS, so the site has no dependency on scanning or physical media. Export requirements are Procreate-native: 3000 × 3750 px (4:5), sRGB, JPG quality ~90.
+
+6. **Preview artwork is fenced off by a flag.** Six placeholder entries exist so every route could be built and reviewed. While `PUBLIC_SITE_LIVE` is unset they carry a Preview badge and the site is `noindex`; setting it to `true` excludes them from the build and prints their slugs as a warning. Logged as D-013.

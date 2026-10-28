@@ -68,7 +68,7 @@ export const typeScale = [
   { className: "text-title", label: "Section title", spec: "28–40px · 500–600", sample: "Our story, drawn by hand" },
   { className: "text-card", label: "Card title", spec: "20–24px · 600", sample: "Blue Petal Story" },
   { className: "text-body", label: "Body text", spec: "16–18px · 400", sample: "A personalized invitation that becomes a keepsake." },
-  { className: "text-caption", label: "Caption", spec: "13–14px · 400–500", sample: "Watercolour on paper, 2026" },
+  { className: "text-caption", label: "Caption", spec: "13–14px · 400–500", sample: "Digital illustration, 2026" },
 ];
 
 export const spacingScale = [

@@ -13,10 +13,12 @@ The master specification is [`PROJECT_SPEC.md`](./PROJECT_SPEC.md). Decisions ar
 | `pnpm build` | static build into `dist/` |
 | `pnpm preview` | preview the built output |
 
-## Current state — Phase 1, design foundation
+## Current state — Phase 1, design foundation + portfolio machinery
 
-Built: token layer, typography, buttons, artwork frames, home page, stub routes, and an internal design-system page.
+Built: token layer, typography, buttons, artwork frames, home page, portfolio grid, artwork detail pages, studio and commission pages, 404, `robots.txt`, `sitemap.xml`, and an internal design-system page.
 
-**Not built yet:** real artwork, portfolio content, commission form, FAQ copy. Those wait on the open items in `PROJECT_SPEC.md` Appendix B.
+**Placeholder artwork:** six entries in `src/content/artworks/` with `placeholder: true`. They render with a Preview badge and the whole site stays `noindex` while `PUBLIC_SITE_LIVE` is unset.
 
-Review the visual direction at `/styleguide` (not indexed, linked from the footer only). The gate for Phase 1 is the artist approving that page.
+**To publish real work:** add the image and set `cover:` + `coverAlt:` in the entry's frontmatter, drop `placeholder: true`, then build with `PUBLIC_SITE_LIVE=true`.
+
+**Still open:** contact details, availability wording, tagline sign-off, Tally form, FAQ copy. See `PROJECT_SPEC.md` Appendix B.

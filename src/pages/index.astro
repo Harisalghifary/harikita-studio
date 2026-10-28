@@ -2,18 +2,17 @@
 import Base from "../layouts/Base.astro";
 import Button from "../components/Button.astro";
 import ArtworkFrame from "../components/ArtworkFrame.astro";
+import ArtworkCard from "../components/ArtworkCard.astro";
 import { site, isPlaceholder } from "../config/site";
+import { getArtworks } from "../lib/artworks";
+
+const artworks = await getArtworks();
+const featured = artworks.filter((entry) => entry.data.featured).slice(0, 3);
+const hasPreview = artworks.some((entry) => entry.data.placeholder);
 
 const availability = isPlaceholder(site.availability)
   ? "A small number of commissions each month, by choice."
   : site.availability;
-
-/** Example design names from PROJECT_SPEC.md §5.2 — placeholders, not real work. */
-const previews = [
-  { name: "Blue Petal Story", style: "Blue Romance", wash: "blue" as const },
-  { name: "Rose Morning", style: "Pink Blossom", wash: "soft" as const },
-  { name: "Soft Sapphire", style: "Watercolor", wash: "blue" as const },
-];
 
 const steps = [
   {
@@ -26,7 +25,7 @@ const steps = [
   },
   {
     title: "Design creation",
-    body: "The invitation artwork is painted and refined with you.",
+    body: "The invitation artwork is drawn and refined with you.",
   },
   {
     title: "Digital keepsake",
@@ -53,7 +52,7 @@ const steps = [
         </h1>
 
         <p class="mt-6 max-w-md text-body text-ink-muted">
-          {site.taglineLong} Painted by hand, made to be kept.
+          {site.taglineLong} Drawn by hand, made to be kept.
         </p>
 
         <div class="mt-9 flex flex-wrap gap-3">
@@ -73,43 +72,41 @@ const steps = [
         <div class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
           <span class="text-eyebrow uppercase text-ink-muted">Placeholder</span>
           <p class="font-serif text-2xl leading-snug">
-            The first three pieces<br />are being painted.
+            The first pieces<br />are being drawn.
           </p>
         </div>
       </ArtworkFrame>
     </div>
   </section>
 
-  <!-- Artwork preview -->
-  <section class="border-y border-line bg-surface/60">
-    <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <h2 class="text-title">The first collection</h2>
-        <p class="max-w-sm text-caption text-ink-muted">
-          Empty frames, kept honest. Names are placeholders until the artwork
-          exists.
-        </p>
-      </div>
+  {
+    featured.length > 0 && (
+      <section class="border-y border-line bg-surface/60">
+        <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <h2 class="text-title">The first collection</h2>
+            <p class="max-w-sm text-caption text-ink-muted">
+              {hasPreview
+                ? "Frames marked Preview hold placeholder work until the real pieces arrive."
+                : "Each piece belongs to one couple. Nothing here is a template."}
+            </p>
+          </div>
 
-      <div class="mt-10 grid gap-6 sm:grid-cols-3">
-        {
-          previews.map((piece) => (
-            <ArtworkFrame
-              ratio="aspect-[4/5]"
-              wash={piece.wash}
-              caption={`${piece.style} · in progress`}
-            >
-              <div class="flex h-full items-end p-6">
-                <p class="font-serif text-xl leading-tight text-ink-muted">
-                  {piece.name}
-                </p>
-              </div>
-            </ArtworkFrame>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+          <ul class="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((artwork, index) => (
+              <li>
+                <ArtworkCard
+                  artwork={artwork}
+                  heading="h3"
+                  wash={index % 2 === 0 ? "blue" : "soft"}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   <!-- Process -->
   <section class="mx-auto max-w-6xl px-6 py-20 sm:py-28">

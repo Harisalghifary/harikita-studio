@@ -5,6 +5,9 @@
 export const site = {
   name: "Harikita Studio",
   shortName: "Harikita",
+  domain: "harikita.store",
+  url: "https://harikita.store",
+
   /** Provisional — pending sign-off (Appendix A). */
   tagline: "Your story, made into art.",
   taglineLong:
@@ -16,7 +19,6 @@ export const site = {
   email: "{{CONTACT_EMAIL}}",
   whatsapp: "{{WHATSAPP}}",
   instagram: "{{INSTAGRAM}}",
-  domain: "{{DOMAIN}}",
   availability: "{{AVAILABILITY_NOTE}}",
 
   nav: [
@@ -26,6 +28,14 @@ export const site = {
     { label: "FAQ", href: "/faq" },
   ],
 } as const;
+
+/**
+ * PUBLIC_SITE_LIVE=false (default): placeholder artwork renders with a Preview
+ * badge and the whole site is noindex.
+ * PUBLIC_SITE_LIVE=true: placeholders are excluded from the build and the site
+ * becomes indexable. Logged in docs/decisions.md D-013.
+ */
+export const SITE_LIVE = import.meta.env.PUBLIC_SITE_LIVE === "true";
 
 /** True while a value is still an unfilled {{placeholder}}. */
 export function isPlaceholder(value: string): boolean {
