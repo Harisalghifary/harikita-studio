@@ -1,17 +1,14 @@
-/*
-  Security and cache headers for Cloudflare Pages.
-  There is no JavaScript in this site, so script-src is locked to 'none'.
-  The commission page embeds the Tally form, so frame-src allows it.
-*/
+# Response headers for Cloudflare.
+# This site ships no JavaScript, so script-src is locked to 'none'.
+# The Tally form is framed only on /commission, so frame-src allows it.
+# Rules apply in order; a later matching block overrides the same header.
+
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
   X-Frame-Options: DENY
   Content-Security-Policy: default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'none'; frame-src https://tally.so; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
-
-/*.html
-  Cache-Control: public, max-age=0, must-revalidate
