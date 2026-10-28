@@ -29,6 +29,8 @@ Built: token layer, typography, buttons, artwork frames, home, portfolio grid, a
 
 Cloudflare Pages, connected to this GitHub repo.
 
+**Connect through Git, not direct upload.** A Pages project created by `wrangler pages deploy` is a direct-upload project and cannot be linked to a repository afterwards. Connecting the repo gives you a deploy on every push.
+
 | Setting | Value |
 |---|---|
 | Framework preset | Astro |
